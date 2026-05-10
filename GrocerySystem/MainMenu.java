@@ -4,10 +4,6 @@ import java.awt.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
 
-// =============================================================
-//  PACKAGE: db
-// =============================================================
-
 class DatabaseConnection {
     private static final String URL      = "jdbc:mysql://localhost:3306/grocerydb";
     private static final String USERNAME = "root";
@@ -22,11 +18,6 @@ class DatabaseConnection {
         }
     }
 }
-
-// =============================================================
-//  PACKAGE: model
-//  — Plain entity classes with private fields, getters, setters
-// =============================================================
 
 class Product {
     private int    productId;
@@ -53,11 +44,11 @@ class Product {
     public String getExpiryDate() { return expiryDate;  }
     public int    getSupplierId() { return supplierId;  }
 
-    public void setName(String name)            { this.name       = name;       }
-    public void setPrice(double price)          { this.price      = price;      }
-    public void setStock(int stock)             { this.stock      = stock;      }
-    public void setExpiryDate(String expiryDate){ this.expiryDate = expiryDate; }
-    public void setSupplierId(int supplierId)   { this.supplierId = supplierId; }
+    public void setName(String name)             { this.name       = name;       }
+    public void setPrice(double price)           { this.price      = price;      }
+    public void setStock(int stock)              { this.stock      = stock;      }
+    public void setExpiryDate(String expiryDate) { this.expiryDate = expiryDate; }
+    public void setSupplierId(int supplierId)    { this.supplierId = supplierId; }
 
     @Override
     public String toString() {
@@ -81,8 +72,8 @@ class Supplier {
     public String getName()       { return name;       }
     public String getContact()    { return contact;    }
 
-    public void setName(String name)        { this.name    = name;    }
-    public void setContact(String contact)  { this.contact = contact; }
+    public void setName(String name)       { this.name    = name;    }
+    public void setContact(String contact) { this.contact = contact; }
 }
 
 class Customer {
@@ -100,8 +91,8 @@ class Customer {
     public String getName()       { return name;       }
     public String getPhone()      { return phone;      }
 
-    public void setName(String name)    { this.name  = name;  }
-    public void setPhone(String phone)  { this.phone = phone; }
+    public void setName(String name)   { this.name  = name;  }
+    public void setPhone(String phone) { this.phone = phone; }
 }
 
 class Employee {
@@ -188,21 +179,13 @@ class SupplyOrder {
     public String getOrderDate()  { return orderDate;  }
 }
 
-// =============================================================
-//  PACKAGE: ui
-//  — Interface + abstract base panel + all CRUD panel classes
-// =============================================================
-
-// ---------- Interface: every panel must support these ----------
 interface CrudOperations {
     void loadData();
     void clearForm();
 }
 
-// ---------- Abstract base class: shared Swing helpers ----------
 abstract class BasePanel extends JFrame implements CrudOperations {
 
-    // Shared protected helper so every subclass can build fields the same way
     protected JTextField addField(JPanel panel, String label) {
         panel.add(new JLabel(label));
         JTextField tf = new JTextField();
@@ -210,7 +193,6 @@ abstract class BasePanel extends JFrame implements CrudOperations {
         return tf;
     }
 
-    // Shared validation: checks that none of the given fields are empty
     protected boolean validateNotEmpty(JTextField... fields) {
         for (JTextField f : fields) {
             if (f.getText().trim().isEmpty()) {
@@ -223,7 +205,6 @@ abstract class BasePanel extends JFrame implements CrudOperations {
         return true;
     }
 
-    // Shared validation: tries to parse an integer; shows error if it fails
     protected boolean validateInt(JTextField field, String fieldName) {
         try {
             Integer.parseInt(field.getText().trim());
@@ -236,7 +217,6 @@ abstract class BasePanel extends JFrame implements CrudOperations {
         }
     }
 
-    // Shared validation: tries to parse a double
     protected boolean validateDouble(JTextField field, String fieldName) {
         try {
             Double.parseDouble(field.getText().trim());
@@ -249,7 +229,6 @@ abstract class BasePanel extends JFrame implements CrudOperations {
         }
     }
 
-    // Shared styled button factory
     protected JButton styledButton(String text, Color bg) {
         JButton btn = new JButton(text);
         btn.setBackground(bg);
@@ -260,9 +239,6 @@ abstract class BasePanel extends JFrame implements CrudOperations {
     }
 }
 
-// =============================================================
-//  MAIN MENU
-// =============================================================
 public class MainMenu extends JFrame {
 
     public MainMenu() {
@@ -333,11 +309,6 @@ public class MainMenu extends JFrame {
     }
 }
 
-// =============================================================
-//  PRODUCTS PANEL
-//  Extends BasePanel (inheritance), implements CrudOperations (interface)
-//  Uses Product model class
-// =============================================================
 class ProductsPanel extends BasePanel {
 
     private JTable            table;
@@ -431,9 +402,9 @@ class ProductsPanel extends BasePanel {
 
     private void addProduct() {
         if (!validateNotEmpty(tfName, tfPrice, tfStock, tfExpiry, tfSupplierId)) return;
-        if (!validateDouble(tfPrice,      "Price"))       return;
-        if (!validateInt(tfStock,         "Stock"))       return;
-        if (!validateInt(tfSupplierId,    "Supplier ID")) return;
+        if (!validateDouble(tfPrice,   "Price"))       return;
+        if (!validateInt(tfStock,      "Stock"))       return;
+        if (!validateInt(tfSupplierId, "Supplier ID")) return;
 
         String sql = "INSERT INTO products (name, price, stock, expiry_date, supplier_id) VALUES (?,?,?,?,?)";
         try (Connection con = DatabaseConnection.getConnection();
@@ -453,10 +424,10 @@ class ProductsPanel extends BasePanel {
 
     private void updateProduct() {
         if (!validateNotEmpty(tfProductId, tfName, tfPrice, tfStock, tfExpiry, tfSupplierId)) return;
-        if (!validateInt(tfProductId,   "Product ID")) return;
-        if (!validateDouble(tfPrice,    "Price"))      return;
-        if (!validateInt(tfStock,       "Stock"))      return;
-        if (!validateInt(tfSupplierId,  "Supplier ID"))return;
+        if (!validateInt(tfProductId,  "Product ID"))  return;
+        if (!validateDouble(tfPrice,   "Price"))       return;
+        if (!validateInt(tfStock,      "Stock"))       return;
+        if (!validateInt(tfSupplierId, "Supplier ID")) return;
 
         String sql = "UPDATE products SET name=?, price=?, stock=?, expiry_date=?, supplier_id=? WHERE product_id=?";
         try (Connection con = DatabaseConnection.getConnection();
@@ -501,9 +472,6 @@ class ProductsPanel extends BasePanel {
     }
 }
 
-// =============================================================
-//  SUPPLIERS PANEL
-// =============================================================
 class SuppliersPanel extends BasePanel {
 
     private JTable            table;
@@ -637,9 +605,6 @@ class SuppliersPanel extends BasePanel {
     }
 }
 
-// =============================================================
-//  CUSTOMERS PANEL
-// =============================================================
 class CustomersPanel extends BasePanel {
 
     private JTable            table;
@@ -773,9 +738,6 @@ class CustomersPanel extends BasePanel {
     }
 }
 
-// =============================================================
-//  EMPLOYEES PANEL
-// =============================================================
 class EmployeesPanel extends BasePanel {
 
     private JTable            table;
@@ -909,9 +871,6 @@ class EmployeesPanel extends BasePanel {
     }
 }
 
-// =============================================================
-//  SUPPLY ORDERS PANEL
-// =============================================================
 class SupplyOrdersPanel extends BasePanel {
 
     private JTable            table;
@@ -1065,9 +1024,6 @@ class SupplyOrdersPanel extends BasePanel {
     }
 }
 
-// =============================================================
-//  SALES PANEL
-// =============================================================
 class SalesPanel extends BasePanel {
 
     private JTable            table;
@@ -1190,9 +1146,6 @@ class SalesPanel extends BasePanel {
     }
 }
 
-// =============================================================
-//  SALE ITEMS PANEL
-// =============================================================
 class SaleItemsPanel extends BasePanel {
 
     private JTable            table;
@@ -1275,10 +1228,10 @@ class SaleItemsPanel extends BasePanel {
 
     private void addSaleItem() {
         if (!validateNotEmpty(tfSaleId, tfProductId, tfQuantity, tfPrice)) return;
-        if (!validateInt(tfSaleId,     "Sale ID"))    return;
-        if (!validateInt(tfProductId,  "Product ID")) return;
-        if (!validateInt(tfQuantity,   "Quantity"))   return;
-        if (!validateDouble(tfPrice,   "Price"))      return;
+        if (!validateInt(tfSaleId,    "Sale ID"))    return;
+        if (!validateInt(tfProductId, "Product ID")) return;
+        if (!validateInt(tfQuantity,  "Quantity"))   return;
+        if (!validateDouble(tfPrice,  "Price"))      return;
 
         String sql = "INSERT INTO sale_items(sale_id, product_id, quantity, price) VALUES(?,?,?,?)";
         try (Connection con = DatabaseConnection.getConnection();
@@ -1321,9 +1274,6 @@ class SaleItemsPanel extends BasePanel {
     }
 }
 
-// =============================================================
-//  REPORTS PANEL
-// =============================================================
 class ReportsPanel extends JFrame {
 
     private JTextArea area;
@@ -1337,9 +1287,9 @@ class ReportsPanel extends JFrame {
         area.setEditable(false);
         area.setFont(new Font("Monospaced", Font.PLAIN, 13));
 
-        JButton btnSales    = new JButton("Total Sales Count");
-        JButton btnStock    = new JButton("Low Stock (< 10)");
-        JButton btnRevenue  = new JButton("Revenue per Product");
+        JButton btnSales   = new JButton("Total Sales Count");
+        JButton btnStock   = new JButton("Low Stock (< 10)");
+        JButton btnRevenue = new JButton("Revenue per Product");
 
         btnSales.addActionListener(e   -> totalSales());
         btnStock.addActionListener(e   -> lowStock());
@@ -1360,9 +1310,8 @@ class ReportsPanel extends JFrame {
         try (Connection con = DatabaseConnection.getConnection();
              Statement stmt = con.createStatement();
              ResultSet rs = stmt.executeQuery("SELECT COUNT(*) AS total FROM sales")) {
-            if (rs.next()) {
+            if (rs.next())
                 area.setText("Total Number of Sales = " + rs.getInt("total"));
-            }
         } catch (Exception e) {
             area.setText(e.getMessage());
         }
