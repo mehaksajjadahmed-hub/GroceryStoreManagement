@@ -3,7 +3,7 @@
 A Java-based desktop application for managing a grocery store. It allows users to manage products, suppliers, customers, employees, sales, and sale items through a GUI built with Java Swing, connected to a MySQL database using JDBC.
 
 ## Group Members
-| Full Name       | CMS/ID      | Section |
+| Full Name       | CMS ID      | Section |
 |-----------------|-------------|---------|
 | Faryal Channa   | 023-25-0158 | C       |
 | Mehak           | 023-25-0164 | C       |
