@@ -26,7 +26,7 @@ To manage grocery store operations including inventory, sales, and reporting.
 3. Compile:javac -cp "lib*" -d . GrocerySystem\MainMenu.java
 4. Run: java -cp ".;lib*" GrocerySystem.MainMenu
    ## Demo Video
-[Click here to watch](YOUR_YOUTUBE_LINK)
+[Click here to watch](https://youtu.be/xhwSwNCP5j0?feature=shared)
 
 ## Repository
 [GitHub Link](https://github.com/mehaksajjadahmed-hub/GroceryStoreManagement)
